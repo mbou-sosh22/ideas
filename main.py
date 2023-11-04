@@ -51,18 +51,18 @@ def login():
         if request.form["btn-log-reg"] == "Вход":
             us = User(user_login, password)
             if us.error == "":
-                return redirect("/idea")
+                return redirect("/idea/")
             else:
                 return render_template("login_form.html", error=us.error)
         else:
             us = User(user_login, password, new_user=True)
-            return redirect("/idea")
+            return redirect("/idea/")
     else:
 
         return render_template("login_form.html", error="")
 
 
-@app.route('/idea', methods=["POST", "GET"])
+@app.route('/idea/', methods=["POST", "GET"])
 def idea():
     global us
     if request.method == "POST":
@@ -70,12 +70,12 @@ def idea():
         email_address = request.form["email_address"]
         idea_text = request.form["idea_text"]
         ideaa = Idea(idea_text, us.username)
-        return redirect("/all_ideas")
+        return redirect("/all_ideas/")
     else:
         return render_template("change.html", us=us)
 
 
-@app.route("/all_ideas")
+@app.route("/all_ideas/")
 def my():
     ideas = sqlite3.connect("all_tables.sqlite").cursor().execute(f"""SELECT idea_text, username FROM ideas""").fetchall()[::-1]
     return render_template("all_ideas.html", ideas=ideas, us=us)
